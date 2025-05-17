@@ -1,17 +1,14 @@
 import { useState, useEffect } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
   const [count, setCount] = useState(0)
-  const [data, setData] = useState(null)
-
+  const [data, setData] = useState({name: null, image: null})
+  
   useEffect(() => {
-    const url = `https://pokeapi.co/api/v2/pokemon/${count}`;
-
+    const url = `https://pokeapi.co/api/v2/pokemon/${count+1}`;
     const fetchPokemon = () => {
-      fetch(url)
+      fetch(url)  
       .then((response) => {
         if(!response.ok) {
           throw new Error(`This aint working b/c ${response.status}`);
@@ -21,6 +18,11 @@ function App() {
       .then((json) => {
         console.log(json.species.name);
         // Maybe you should change the state
+        setData((data) => ({
+          name: json?.species.name,
+          image: json?.sprites.front_default,
+        }));
+        //setData(json.data);
       })
       .catch((error)=> {
         console.error(error.message);
@@ -33,17 +35,13 @@ function App() {
   return (
     <>
       <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        
       </div>
-      <h1>Vite + React</h1>
+      <h1>{data.name}</h1>
+      <img src={data.image}/>
       <div className="card">
         <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+          Get A New Pokemon
         </button>
         <p>
           Edit <code>src/App.jsx</code> and save to test HMR
